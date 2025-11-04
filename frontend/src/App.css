@@ -177,10 +177,12 @@
 }
 
 .lotteries-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  display: flex;
+  flex-wrap: wrap;
   gap: 2rem;
   padding: 0;
+  justify-content: center;
+  align-items: flex-start;
 }
 
 .lottery-card {
@@ -191,11 +193,46 @@
   transition: all 0.3s ease;
   display: flex;
   flex-direction: column;
+  width: 350px;
+  flex-shrink: 0;
 }
 
 .lottery-card:hover {
   transform: translateY(-4px);
   box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+}
+
+.lottery-card.you-won {
+  position: relative;
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(251, 191, 36, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(251, 191, 36, 0.8);
+  }
+}
+
+.lottery-card.you-won::before {
+  content: "⭐";
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  font-size: 2rem;
+  z-index: 10;
+  animation: bounce 1s ease-in-out infinite;
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
 }
 
 .lottery-header {
@@ -478,8 +515,13 @@
   }
 
   .lotteries-grid {
-    grid-template-columns: 1fr;
     gap: 1.5rem;
+    justify-content: center;
+  }
+
+  .lottery-card {
+    width: 100%;
+    max-width: 350px;
   }
 
   .modal {

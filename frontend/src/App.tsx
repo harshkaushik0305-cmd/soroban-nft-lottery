@@ -483,208 +483,250 @@ function App() {
           </div>
         ) : (
           <div className="lotteries-grid">
-            {lotteries.map((lottery) => (
-              <div key={lottery.id} className="lottery-card">
+            {lotteries.map((lottery) => {
+              const isWinner =
+                wallet.address &&
+                lottery.winner &&
+                lottery.winner.toLowerCase() === wallet.address.toLowerCase();
+              return (
                 <div
-                  className="lottery-header"
-                  style={{
-                    borderTopColor: getRarityColor(lottery.nft_prize.rarity),
-                  }}
+                  key={lottery.id}
+                  className={`lottery-card ${isWinner ? "you-won" : ""}`}
+                  style={
+                    isWinner
+                      ? {
+                          border: "3px solid #fbbf24",
+                          boxShadow: "0 0 20px rgba(251, 191, 36, 0.5)",
+                        }
+                      : {}
+                  }
                 >
-                  <div className="lottery-title">
-                    <h3>{lottery.nft_prize.name}</h3>
-                    <span
-                      className="rarity-badge"
-                      style={{
-                        backgroundColor: getRarityColor(
-                          lottery.nft_prize.rarity
-                        ),
-                      }}
-                    >
-                      {getRarityName(lottery.nft_prize.rarity)}
-                    </span>
-                  </div>
-                  <div className="lottery-status">
-                    {lottery.is_active ? (
-                      <span className="status-active">🟢 Active</span>
-                    ) : (
-                      <span className="status-ended">🔴 Ended</span>
-                    )}
-                  </div>
-                </div>
-
-                <div className="lottery-image">
-                  <img
-                    src={lottery.nft_prize.image_url}
-                    alt={lottery.nft_prize.name}
-                    onError={(e) => {
-                      (e.target as HTMLImageElement).src =
-                        "https://placehold.co/400x400?text=NFT";
+                  <div
+                    className="lottery-header"
+                    style={{
+                      borderTopColor: getRarityColor(lottery.nft_prize.rarity),
                     }}
-                  />
-                </div>
-
-                <div className="lottery-info">
-                  <div className="info-row">
-                    <span>Ticket Price:</span>
-                    <span>{formatPrice(lottery.ticket_price)} XLM</span>
-                  </div>
-                  <div className="info-row">
-                    <span>Tickets Sold:</span>
-                    <span>
-                      {lottery.tickets_sold} / {lottery.max_tickets}
-                    </span>
-                  </div>
-                  <div className="info-row">
-                    <span>Progress:</span>
-                    <span>
-                      {Math.round(
-                        (lottery.tickets_sold / lottery.max_tickets) * 100
-                      )}
-                      %
-                    </span>
-                  </div>
-                  {lottery.winner && (
-                    <div
-                      className="info-row winner"
-                      style={{
-                        backgroundColor: "#fef3c7",
-                        padding: "12px",
-                        borderRadius: "8px",
-                        marginTop: "8px",
-                        border: "2px solid #f59e0b",
-                      }}
-                    >
-                      <span style={{ fontWeight: "bold", fontSize: "16px" }}>
-                        🏆 Winner:
-                      </span>
+                  >
+                    <div className="lottery-title">
+                      <h3>{lottery.nft_prize.name}</h3>
                       <span
+                        className="rarity-badge"
                         style={{
-                          fontWeight: "bold",
-                          fontFamily: "monospace",
-                          fontSize: "14px",
+                          backgroundColor: getRarityColor(
+                            lottery.nft_prize.rarity
+                          ),
                         }}
                       >
-                        {lottery.winner.length > 12
-                          ? `${lottery.winner.slice(
-                              0,
-                              8
-                            )}...${lottery.winner.slice(-8)}`
-                          : lottery.winner}
+                        {getRarityName(lottery.nft_prize.rarity)}
                       </span>
                     </div>
-                  )}
-                  {!lottery.is_active && !lottery.winner && (
-                    <div
-                      className="info-row"
-                      style={{
-                        color: "#6b7280",
-                        fontStyle: "italic",
-                        marginTop: "8px",
-                      }}
-                    >
-                      <span>No winner drawn yet</span>
-                    </div>
-                  )}
-                </div>
-
-                <div className="lottery-actions">
-                  {wallet.isConnected && wallet.address && (
-                    <>
+                    <div className="lottery-status">
                       {lottery.is_active ? (
-                        <>
-                          {lottery.tickets_sold < lottery.max_tickets && (
+                        <span className="status-active">🟢 Active</span>
+                      ) : (
+                        <span className="status-ended">🔴 Ended</span>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="lottery-image">
+                    <img
+                      src={lottery.nft_prize.image_url}
+                      alt={lottery.nft_prize.name}
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).src =
+                          "https://placehold.co/400x400?text=NFT";
+                      }}
+                    />
+                  </div>
+
+                  <div className="lottery-info">
+                    <div className="info-row">
+                      <span>Ticket Price:</span>
+                      <span>{formatPrice(lottery.ticket_price)} XLM</span>
+                    </div>
+                    <div className="info-row">
+                      <span>Tickets Sold:</span>
+                      <span>
+                        {lottery.tickets_sold} / {lottery.max_tickets}
+                      </span>
+                    </div>
+                    <div className="info-row">
+                      <span>Progress:</span>
+                      <span>
+                        {Math.round(
+                          (lottery.tickets_sold / lottery.max_tickets) * 100
+                        )}
+                        %
+                      </span>
+                    </div>
+                    {lottery.winner && (
+                      <div
+                        className="info-row winner"
+                        style={{
+                          backgroundColor: isWinner ? "#dcfce7" : "#fef3c7",
+                          padding: "12px",
+                          borderRadius: "8px",
+                          marginTop: "8px",
+                          border: isWinner
+                            ? "2px solid #10b981"
+                            : "2px solid #f59e0b",
+                        }}
+                      >
+                        <span style={{ fontWeight: "bold", fontSize: "16px" }}>
+                          {isWinner ? "🎉 You Won!" : "🏆 Winner:"}
+                        </span>
+                        {!isWinner && (
+                          <span
+                            style={{
+                              fontWeight: "bold",
+                              fontFamily: "monospace",
+                              fontSize: "14px",
+                            }}
+                          >
+                            {lottery.winner.length > 12
+                              ? `${lottery.winner.slice(
+                                  0,
+                                  8
+                                )}...${lottery.winner.slice(-8)}`
+                              : lottery.winner}
+                          </span>
+                        )}
+                      </div>
+                    )}
+                    {!lottery.is_active && !lottery.winner && (
+                      <div
+                        className="info-row"
+                        style={{
+                          color: "#6b7280",
+                          fontStyle: "italic",
+                          marginTop: "8px",
+                        }}
+                      >
+                        <span>No winner drawn yet</span>
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="lottery-actions">
+                    {wallet.isConnected && wallet.address && (
+                      <>
+                        {lottery.is_active ? (
+                          <>
+                            {lottery.tickets_sold < lottery.max_tickets && (
+                              <button
+                                onClick={() => {
+                                  setSelectedLottery(Number(lottery.id));
+                                  setShowBuyForm(true);
+                                }}
+                                className="action-btn buy-btn"
+                                disabled={processing}
+                              >
+                                🎫 Buy Tickets
+                              </button>
+                            )}
+                            {lottery.tickets_sold >= lottery.max_tickets && (
+                              <div
+                                style={{
+                                  padding: "8px",
+                                  backgroundColor: "#fee2e2",
+                                  borderRadius: "6px",
+                                  textAlign: "center",
+                                  fontSize: "14px",
+                                  fontWeight: "500",
+                                  color: "#991b1b",
+                                }}
+                              >
+                                🚫 Sold Out
+                              </div>
+                            )}
                             <button
                               onClick={() => {
                                 setSelectedLottery(Number(lottery.id));
-                                setShowBuyForm(true);
+                                loadUserTickets(Number(lottery.id));
                               }}
-                              className="action-btn buy-btn"
-                              disabled={processing}
+                              className="action-btn"
                             >
-                              🎫 Buy Tickets
+                              🎟️ My Tickets
                             </button>
-                          )}
-                          {lottery.tickets_sold >= lottery.max_tickets && (
-                            <div style={{ 
-                              padding: '8px', 
-                              backgroundColor: '#fee2e2', 
-                              borderRadius: '6px',
-                              textAlign: 'center',
-                              fontSize: '14px',
-                              fontWeight: '500',
-                              color: '#991b1b'
-                            }}>
-                              🚫 Sold Out
-                            </div>
-                          )}
-                          <button
-                            onClick={() => {
-                              setSelectedLottery(Number(lottery.id));
-                              loadUserTickets(Number(lottery.id));
-                            }}
-                            className="action-btn"
-                          >
-                            🎟️ My Tickets
-                          </button>
-                          {wallet.address === ADMIN_ADDRESS && (
+                            {wallet.address === ADMIN_ADDRESS && (
+                              <button
+                                onClick={() =>
+                                  handleDrawWinner(Number(lottery.id))
+                                }
+                                className="action-btn draw-btn"
+                                disabled={processing}
+                              >
+                                🎲 Draw Winner
+                              </button>
+                            )}
+                          </>
+                        ) : (
+                          <>
                             <button
-                              onClick={() => handleDrawWinner(Number(lottery.id))}
-                              className="action-btn draw-btn"
-                              disabled={processing}
-                            >
-                              🎲 Draw Winner
-                            </button>
-                          )}
-                        </>
-                      ) : (
-                        <>
-                          <button
-                            onClick={() => {
-                              setSelectedLottery(Number(lottery.id));
-                              loadUserTickets(Number(lottery.id));
-                            }}
-                            className="action-btn"
-                          >
-                            🎟️ My Tickets
-                          </button>
-                          {lottery.winner && (
-                            <div
-                              style={{
-                                padding: "8px",
-                                backgroundColor: "#dcfce7",
-                                borderRadius: "6px",
-                                marginTop: "8px",
-                                textAlign: "center",
-                                fontSize: "14px",
-                                fontWeight: "500",
+                              onClick={() => {
+                                setSelectedLottery(Number(lottery.id));
+                                loadUserTickets(Number(lottery.id));
                               }}
+                              className="action-btn"
                             >
-                              ✅ Lottery Completed
-                            </div>
-                          )}
-                        </>
-                      )}
-                    </>
-                  )}
-                </div>
+                              🎟️ My Tickets
+                            </button>
+                            {lottery.winner && (
+                              <div
+                                style={{
+                                  padding: "8px",
+                                  backgroundColor: "#dcfce7",
+                                  borderRadius: "6px",
+                                  marginTop: "8px",
+                                  textAlign: "center",
+                                  fontSize: "14px",
+                                  fontWeight: "500",
+                                }}
+                              >
+                                ✅ Lottery Completed
+                              </div>
+                            )}
+                          </>
+                        )}
+                      </>
+                    )}
+                  </div>
 
-                {selectedLottery === Number(lottery.id) &&
-                  userTickets.length > 0 && (
-                    <div className="user-tickets">
-                      <h4>Your Tickets:</h4>
-                      <div className="tickets-list">
-                        {userTickets.map((ticket) => (
-                          <span key={ticket} className="ticket-number">
-                            #{ticket}
-                          </span>
-                        ))}
-                      </div>
+                  {isWinner && (
+                    <div
+                      style={{
+                        padding: "12px",
+                        margin: "0 1.25rem",
+                        backgroundColor: "#dcfce7",
+                        borderRadius: "8px",
+                        textAlign: "center",
+                        fontWeight: "bold",
+                        color: "#065f46",
+                        borderTop: "1px solid #e2e8f0",
+                      }}
+                    >
+                      🎊 Congratulations! You won this lottery! 🎊
                     </div>
                   )}
-              </div>
-            ))}
-      </div>
+
+                  {selectedLottery === Number(lottery.id) &&
+                    userTickets.length > 0 && (
+                      <div className="user-tickets">
+                        <h4>Your Tickets:</h4>
+                        <div className="tickets-list">
+                          {userTickets.map((ticket) => (
+                            <span key={ticket} className="ticket-number">
+                              #{ticket}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                </div>
+              );
+            })}
+          </div>
         )}
       </main>
 
@@ -694,7 +736,7 @@ function App() {
         </p>
         <p>Built on Stellar Soroban Testnet</p>
       </footer>
-      </div>
+    </div>
   );
 }
 
