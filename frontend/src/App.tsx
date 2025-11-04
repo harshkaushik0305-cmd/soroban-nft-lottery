@@ -593,16 +593,31 @@ function App() {
                     <>
                       {lottery.is_active ? (
                         <>
-                          <button
-                            onClick={() => {
-                              setSelectedLottery(Number(lottery.id));
-                              setShowBuyForm(true);
-                            }}
-                            className="action-btn buy-btn"
-                            disabled={processing}
-                          >
-                            🎫 Buy Tickets
-                          </button>
+                          {lottery.tickets_sold < lottery.max_tickets && (
+                            <button
+                              onClick={() => {
+                                setSelectedLottery(Number(lottery.id));
+                                setShowBuyForm(true);
+                              }}
+                              className="action-btn buy-btn"
+                              disabled={processing}
+                            >
+                              🎫 Buy Tickets
+                            </button>
+                          )}
+                          {lottery.tickets_sold >= lottery.max_tickets && (
+                            <div style={{ 
+                              padding: '8px', 
+                              backgroundColor: '#fee2e2', 
+                              borderRadius: '6px',
+                              textAlign: 'center',
+                              fontSize: '14px',
+                              fontWeight: '500',
+                              color: '#991b1b'
+                            }}>
+                              🚫 Sold Out
+                            </div>
+                          )}
                           <button
                             onClick={() => {
                               setSelectedLottery(Number(lottery.id));
