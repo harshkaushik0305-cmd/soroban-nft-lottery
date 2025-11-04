@@ -21,6 +21,12 @@ export const CONTRACT_ID =
 export const TESTNET_NETWORK_PASSPHRASE = "Test SDF Network ; September 2015";
 export const SOROBAN_RPC_URL = "https://soroban-testnet.stellar.org";
 
+// Admin address - can be overridden via environment variable
+// This is the admin address from contract initialization
+export const ADMIN_ADDRESS =
+  import.meta.env.VITE_ADMIN_ADDRESS ||
+  "GB7UYMD3K7CLHC374ZRZDAR5ORC55P7BIFTSZZT426GS6OQHVFP5G3XG";
+
 export interface Lottery {
   id: string;
   ticket_price: string;

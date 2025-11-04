@@ -7,6 +7,7 @@ import {
   prepareTransaction,
   type Lottery,
   CONTRACT_ID,
+  ADMIN_ADDRESS,
 } from "./utils/contract";
 import { nativeToScVal, Address } from "@stellar/stellar-sdk";
 import "./App.css";
@@ -318,12 +319,15 @@ function App() {
 
       {wallet.isConnected && wallet.address && (
         <div className="actions-bar">
-          <button
-            onClick={() => setShowCreateForm(true)}
-            className="action-btn create-btn"
-          >
-            ➕ Create Lottery
-          </button>
+          {wallet.address === ADMIN_ADDRESS && (
+            <button
+              onClick={() => setShowCreateForm(true)}
+              className="action-btn create-btn"
+              disabled={processing}
+            >
+              ➕ Create Lottery
+            </button>
+          )}
           <button onClick={loadLotteries} className="action-btn">
             🔄 Refresh
           </button>
@@ -608,13 +612,15 @@ function App() {
                           >
                             🎟️ My Tickets
                           </button>
-                          <button
-                            onClick={() => handleDrawWinner(Number(lottery.id))}
-                            className="action-btn draw-btn"
-                            disabled={processing}
-                          >
-                            🎲 Draw Winner
-                          </button>
+                          {wallet.address === ADMIN_ADDRESS && (
+                            <button
+                              onClick={() => handleDrawWinner(Number(lottery.id))}
+                              className="action-btn draw-btn"
+                              disabled={processing}
+                            >
+                              🎲 Draw Winner
+                            </button>
+                          )}
                         </>
                       ) : (
                         <>
@@ -663,7 +669,7 @@ function App() {
                   )}
               </div>
             ))}
-          </div>
+      </div>
         )}
       </main>
 
@@ -673,7 +679,7 @@ function App() {
         </p>
         <p>Built on Stellar Soroban Testnet</p>
       </footer>
-    </div>
+      </div>
   );
 }
 
