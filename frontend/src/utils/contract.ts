@@ -109,15 +109,56 @@ export const getLottery = async (
         result as rpc.Api.SimulateTransactionSuccessResponse;
       if (successResult.result) {
         const lottery = scValToNative(successResult.result.retval) as any;
+        
+        // Parse winner address - handle different possible formats
+        let winnerAddress: string | null = null;
+        if (lottery.winner) {
+          try {
+            // The winner is an Option<Address>, so scValToNative should return
+            // either null/undefined if None, or an Address object if Some
+            // Address from scValToNative typically has a _value property with the raw bytes
+            if (lottery.winner._value) {
+              // Address object with _value property (raw bytes)
+              winnerAddress = StrKey.encodeEd25519PublicKey(lottery.winner._value);
+            } else if (typeof lottery.winner === 'string') {
+              // Already a string
+              winnerAddress = lottery.winner;
+            } else if (lottery.winner.address) {
+              // Address object with address property
+              winnerAddress = StrKey.encodeEd25519PublicKey(lottery.winner.address);
+            } else if (lottery.winner.toString && typeof lottery.winner.toString === 'function') {
+              // Try toString method
+              winnerAddress = lottery.winner.toString();
+            } else {
+              // Last resort: try to extract bytes from the object
+              console.warn("Winner address format unexpected:", lottery.winner);
+              if (lottery.winner && typeof lottery.winner === 'object') {
+                const keys = Object.keys(lottery.winner);
+                for (const key of keys) {
+                  const val = (lottery.winner as any)[key];
+                  if (val && (Array.isArray(val) || (val instanceof Uint8Array))) {
+                    try {
+                      winnerAddress = StrKey.encodeEd25519PublicKey(val);
+                      break;
+                    } catch (e) {
+                      // Continue trying
+                    }
+                  }
+                }
+              }
+            }
+          } catch (e) {
+            console.error("Error parsing winner address:", e, lottery.winner);
+          }
+        }
+        
         return {
           id: lottery.id.toString(),
           ticket_price: lottery.ticket_price.toString(),
           max_tickets: Number(lottery.max_tickets),
           tickets_sold: Number(lottery.tickets_sold),
           is_active: lottery.is_active,
-          winner: lottery.winner
-            ? StrKey.encodeEd25519PublicKey(lottery.winner._value)
-            : null,
+          winner: winnerAddress,
           nft_prize: {
             name: lottery.nft_prize.name.toString(),
             image_url: lottery.nft_prize.image_url.toString(),

@@ -1,7 +1,5 @@
 #![no_std]
-use soroban_sdk::{
-    contract, contractimpl, contracttype, token, Address, Env, String, Vec,
-};
+use soroban_sdk::{contract, contractimpl, contracttype, token, Address, Env, String, Vec};
 
 #[derive(Clone)]
 #[contracttype]
@@ -36,7 +34,7 @@ pub enum DataKey {
     Admin,
     LotteryCount,
     Lottery(u64),
-    Tickets(u64), // lottery_id -> Vec<Ticket>
+    Tickets(u64),              // lottery_id -> Vec<Ticket>
     UserTickets(Address, u64), // (user, lottery_id) -> Vec<u32>
     PaymentToken,
 }
@@ -51,9 +49,11 @@ impl NFTLotteryContract {
         if env.storage().instance().has(&DataKey::Admin) {
             panic!("Already initialized");
         }
-        
+
         env.storage().instance().set(&DataKey::Admin, &admin);
-        env.storage().instance().set(&DataKey::PaymentToken, &payment_token);
+        env.storage()
+            .instance()
+            .set(&DataKey::PaymentToken, &payment_token);
         env.storage().instance().set(&DataKey::LotteryCount, &0u64);
     }
 
@@ -68,13 +68,17 @@ impl NFTLotteryContract {
         nft_rarity: u32,
     ) -> u64 {
         admin.require_auth();
-        
+
         let stored_admin: Address = env.storage().instance().get(&DataKey::Admin).unwrap();
         if admin != stored_admin {
             panic!("Unauthorized");
         }
 
-        let lottery_count: u64 = env.storage().instance().get(&DataKey::LotteryCount).unwrap_or(0);
+        let lottery_count: u64 = env
+            .storage()
+            .instance()
+            .get(&DataKey::LotteryCount)
+            .unwrap_or(0);
         let lottery_id = lottery_count + 1;
 
         let nft_metadata = NFTMetadata {
@@ -93,12 +97,18 @@ impl NFTLotteryContract {
             nft_prize: nft_metadata,
         };
 
-        env.storage().persistent().set(&DataKey::Lottery(lottery_id), &lottery);
-        env.storage().instance().set(&DataKey::LotteryCount, &lottery_id);
-        
+        env.storage()
+            .persistent()
+            .set(&DataKey::Lottery(lottery_id), &lottery);
+        env.storage()
+            .instance()
+            .set(&DataKey::LotteryCount, &lottery_id);
+
         // Initialize empty ticket list
         let empty_tickets: Vec<Ticket> = Vec::new(&env);
-        env.storage().persistent().set(&DataKey::Tickets(lottery_id), &empty_tickets);
+        env.storage()
+            .persistent()
+            .set(&DataKey::Tickets(lottery_id), &empty_tickets);
 
         lottery_id
     }
@@ -107,7 +117,9 @@ impl NFTLotteryContract {
     pub fn buy_ticket(env: Env, buyer: Address, lottery_id: u64, num_tickets: u32) {
         buyer.require_auth();
 
-        let mut lottery: Lottery = env.storage().persistent()
+        let mut lottery: Lottery = env
+            .storage()
+            .persistent()
             .get(&DataKey::Lottery(lottery_id))
             .unwrap();
 
@@ -120,18 +132,26 @@ impl NFTLotteryContract {
         }
 
         // Transfer payment
-        let payment_token: Address = env.storage().instance().get(&DataKey::PaymentToken).unwrap();
+        let payment_token: Address = env
+            .storage()
+            .instance()
+            .get(&DataKey::PaymentToken)
+            .unwrap();
         let token_client = token::Client::new(&env, &payment_token);
         let total_cost = lottery.ticket_price * (num_tickets as i128);
-        
+
         token_client.transfer(&buyer, &env.current_contract_address(), &total_cost);
 
         // Create tickets
-        let mut all_tickets: Vec<Ticket> = env.storage().persistent()
+        let mut all_tickets: Vec<Ticket> = env
+            .storage()
+            .persistent()
             .get(&DataKey::Tickets(lottery_id))
             .unwrap();
 
-        let mut user_ticket_numbers: Vec<u32> = env.storage().persistent()
+        let mut user_ticket_numbers: Vec<u32> = env
+            .storage()
+            .persistent()
             .get(&DataKey::UserTickets(buyer.clone(), lottery_id))
             .unwrap_or(Vec::new(&env));
 
@@ -149,21 +169,30 @@ impl NFTLotteryContract {
         lottery.tickets_sold += num_tickets;
 
         // Save updates
-        env.storage().persistent().set(&DataKey::Lottery(lottery_id), &lottery);
-        env.storage().persistent().set(&DataKey::Tickets(lottery_id), &all_tickets);
-        env.storage().persistent().set(&DataKey::UserTickets(buyer, lottery_id), &user_ticket_numbers);
+        env.storage()
+            .persistent()
+            .set(&DataKey::Lottery(lottery_id), &lottery);
+        env.storage()
+            .persistent()
+            .set(&DataKey::Tickets(lottery_id), &all_tickets);
+        env.storage().persistent().set(
+            &DataKey::UserTickets(buyer, lottery_id),
+            &user_ticket_numbers,
+        );
     }
 
     /// Draw winner (only admin)
     pub fn draw_winner(env: Env, admin: Address, lottery_id: u64) -> Address {
         admin.require_auth();
-        
+
         let stored_admin: Address = env.storage().instance().get(&DataKey::Admin).unwrap();
         if admin != stored_admin {
             panic!("Unauthorized");
         }
 
-        let mut lottery: Lottery = env.storage().persistent()
+        let mut lottery: Lottery = env
+            .storage()
+            .persistent()
             .get(&DataKey::Lottery(lottery_id))
             .unwrap();
 
@@ -175,7 +204,9 @@ impl NFTLotteryContract {
             panic!("No tickets sold");
         }
 
-        let all_tickets: Vec<Ticket> = env.storage().persistent()
+        let all_tickets: Vec<Ticket> = env
+            .storage()
+            .persistent()
             .get(&DataKey::Tickets(lottery_id))
             .unwrap();
 
@@ -186,28 +217,35 @@ impl NFTLotteryContract {
         lottery.winner = Some(winning_ticket.owner.clone());
         lottery.is_active = false;
 
-        env.storage().persistent().set(&DataKey::Lottery(lottery_id), &lottery);
+        env.storage()
+            .persistent()
+            .set(&DataKey::Lottery(lottery_id), &lottery);
 
         winning_ticket.owner
     }
 
     /// Get lottery details
     pub fn get_lottery(env: Env, lottery_id: u64) -> Lottery {
-        env.storage().persistent()
+        env.storage()
+            .persistent()
             .get(&DataKey::Lottery(lottery_id))
             .unwrap()
     }
 
     /// Get user's tickets for a lottery
     pub fn get_user_tickets(env: Env, user: Address, lottery_id: u64) -> Vec<u32> {
-        env.storage().persistent()
+        env.storage()
+            .persistent()
             .get(&DataKey::UserTickets(user, lottery_id))
             .unwrap_or(Vec::new(&env))
     }
 
     /// Get total lottery count
     pub fn get_lottery_count(env: Env) -> u64 {
-        env.storage().instance().get(&DataKey::LotteryCount).unwrap_or(0)
+        env.storage()
+            .instance()
+            .get(&DataKey::LotteryCount)
+            .unwrap_or(0)
     }
 }
 

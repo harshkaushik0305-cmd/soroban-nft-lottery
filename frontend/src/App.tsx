@@ -46,11 +46,11 @@ function App() {
       setError(null);
       const count = await getLotteryCount();
       const lotteryPromises: Promise<Lottery | null>[] = [];
-      
+
       for (let i = 1; i <= count; i++) {
         lotteryPromises.push(getLottery(i));
       }
-      
+
       const results = await Promise.all(lotteryPromises);
       setLotteries(results.filter((l): l is Lottery => l !== null));
     } catch (err: any) {
@@ -62,7 +62,7 @@ function App() {
 
   const loadUserTickets = async (lotteryId: number) => {
     if (!wallet.address) return;
-    
+
     try {
       const tickets = await getUserTickets(wallet.address, lotteryId);
       setUserTickets(tickets);
@@ -124,7 +124,7 @@ function App() {
       );
 
       await wallet.signAndSubmit(txXdr);
-      
+
       setShowCreateForm(false);
       setCreateForm({
         ticket_price: "",
@@ -133,22 +133,27 @@ function App() {
         nft_image: "",
         nft_rarity: "1",
       });
-      
+
       setTimeout(() => {
         loadLotteries();
       }, 2000);
     } catch (err: any) {
       let errorMessage = err.message || "Failed to create lottery";
-      
+
       // Provide more helpful error messages
-      if (errorMessage.includes("UnreachableCodeReached") || errorMessage.includes("InvalidAction")) {
-        errorMessage = "Contract not initialized or unauthorized. Please ensure:\n1. The contract has been initialized\n2. Your wallet address is the admin address\n3. You have sufficient funds";
+      if (
+        errorMessage.includes("UnreachableCodeReached") ||
+        errorMessage.includes("InvalidAction")
+      ) {
+        errorMessage =
+          "Contract not initialized or unauthorized. Please ensure:\n1. The contract has been initialized\n2. Your wallet address is the admin address\n3. You have sufficient funds";
       } else if (errorMessage.includes("Unauthorized")) {
-        errorMessage = "Unauthorized: Your wallet address is not the admin address";
+        errorMessage =
+          "Unauthorized: Your wallet address is not the admin address";
       } else if (errorMessage.includes("Simulation failed")) {
         errorMessage = `Transaction simulation failed: ${errorMessage}`;
       }
-      
+
       setError(errorMessage);
     } finally {
       setProcessing(false);
@@ -181,10 +186,10 @@ function App() {
       );
 
       await wallet.signAndSubmit(txXdr);
-      
+
       setShowBuyForm(false);
       setBuyForm({ num_tickets: "1" });
-      
+
       setTimeout(() => {
         loadLotteries();
         if (selectedLottery) {
@@ -204,7 +209,11 @@ function App() {
       return;
     }
 
-    if (!confirm("Are you sure you want to draw the winner? This will end the lottery.")) {
+    if (
+      !confirm(
+        "Are you sure you want to draw the winner? This will end the lottery."
+      )
+    ) {
       return;
     }
 
@@ -226,7 +235,7 @@ function App() {
       );
 
       await wallet.signAndSubmit(txXdr);
-      
+
       setTimeout(() => {
         loadLotteries();
       }, 2000);
@@ -279,14 +288,26 @@ function App() {
 
       {error && (
         <div className="error-banner">
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+          <div
+            style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}
+          >
             <span>⚠️ {error}</span>
             {error.includes("Contract not initialized") && (
-              <div style={{ fontSize: '0.875rem', marginTop: '0.5rem' }}>
-                <strong>Note:</strong> The contract must be initialized before creating lotteries. 
-                Use the Stellar CLI to initialize:
-                <code style={{ display: 'block', marginTop: '0.25rem', padding: '0.25rem', background: 'rgba(0,0,0,0.2)', borderRadius: '4px' }}>
-                  stellar contract invoke --id {CONTRACT_ID} --source admin --network testnet -- initialize --admin YOUR_ADMIN_ADDRESS --payment_token YOUR_TOKEN_ID
+              <div style={{ fontSize: "0.875rem", marginTop: "0.5rem" }}>
+                <strong>Note:</strong> The contract must be initialized before
+                creating lotteries. Use the Stellar CLI to initialize:
+                <code
+                  style={{
+                    display: "block",
+                    marginTop: "0.25rem",
+                    padding: "0.25rem",
+                    background: "rgba(0,0,0,0.2)",
+                    borderRadius: "4px",
+                  }}
+                >
+                  stellar contract invoke --id {CONTRACT_ID} --source admin
+                  --network testnet -- initialize --admin YOUR_ADMIN_ADDRESS
+                  --payment_token YOUR_TOKEN_ID
                 </code>
               </div>
             )}
@@ -320,7 +341,10 @@ function App() {
                   type="number"
                   value={createForm.ticket_price}
                   onChange={(e) =>
-                    setCreateForm({ ...createForm, ticket_price: e.target.value })
+                    setCreateForm({
+                      ...createForm,
+                      ticket_price: e.target.value,
+                    })
                   }
                   required
                   min="1"
@@ -333,7 +357,10 @@ function App() {
                   type="number"
                   value={createForm.max_tickets}
                   onChange={(e) =>
-                    setCreateForm({ ...createForm, max_tickets: e.target.value })
+                    setCreateForm({
+                      ...createForm,
+                      max_tickets: e.target.value,
+                    })
                   }
                   required
                   min="1"
@@ -465,7 +492,9 @@ function App() {
                     <span
                       className="rarity-badge"
                       style={{
-                        backgroundColor: getRarityColor(lottery.nft_prize.rarity),
+                        backgroundColor: getRarityColor(
+                          lottery.nft_prize.rarity
+                        ),
                       }}
                     >
                       {getRarityName(lottery.nft_prize.rarity)}
@@ -486,7 +515,7 @@ function App() {
                     alt={lottery.nft_prize.name}
                     onError={(e) => {
                       (e.target as HTMLImageElement).src =
-                        "https://via.placeholder.com/400x400?text=NFT";
+                        "https://placehold.co/400x400?text=NFT";
                     }}
                   />
                 </div>
@@ -512,50 +541,111 @@ function App() {
                     </span>
                   </div>
                   {lottery.winner && (
-                    <div className="info-row winner">
-                      <span>🏆 Winner:</span>
-                      <span>
-                        {lottery.winner.slice(0, 6)}...{lottery.winner.slice(-6)}
+                    <div
+                      className="info-row winner"
+                      style={{
+                        backgroundColor: "#fef3c7",
+                        padding: "12px",
+                        borderRadius: "8px",
+                        marginTop: "8px",
+                        border: "2px solid #f59e0b",
+                      }}
+                    >
+                      <span style={{ fontWeight: "bold", fontSize: "16px" }}>
+                        🏆 Winner:
                       </span>
+                      <span
+                        style={{
+                          fontWeight: "bold",
+                          fontFamily: "monospace",
+                          fontSize: "14px",
+                        }}
+                      >
+                        {lottery.winner.length > 12
+                          ? `${lottery.winner.slice(
+                              0,
+                              8
+                            )}...${lottery.winner.slice(-8)}`
+                          : lottery.winner}
+                      </span>
+                    </div>
+                  )}
+                  {!lottery.is_active && !lottery.winner && (
+                    <div
+                      className="info-row"
+                      style={{
+                        color: "#6b7280",
+                        fontStyle: "italic",
+                        marginTop: "8px",
+                      }}
+                    >
+                      <span>No winner drawn yet</span>
                     </div>
                   )}
                 </div>
 
                 <div className="lottery-actions">
-                  {wallet.isConnected && wallet.address && lottery.is_active && (
+                  {wallet.isConnected && wallet.address && (
                     <>
-                      <button
-                        onClick={() => {
-                          setSelectedLottery(Number(lottery.id));
-                          setShowBuyForm(true);
-                        }}
-                        className="action-btn buy-btn"
-                        disabled={processing}
-                      >
-                        🎫 Buy Tickets
-                      </button>
-                      <button
-                        onClick={() => {
-                          setSelectedLottery(Number(lottery.id));
-                          loadUserTickets(Number(lottery.id));
-                        }}
-                        className="action-btn"
-                      >
-                        🎟️ My Tickets
-                      </button>
+                      {lottery.is_active ? (
+                        <>
+                          <button
+                            onClick={() => {
+                              setSelectedLottery(Number(lottery.id));
+                              setShowBuyForm(true);
+                            }}
+                            className="action-btn buy-btn"
+                            disabled={processing}
+                          >
+                            🎫 Buy Tickets
+                          </button>
+                          <button
+                            onClick={() => {
+                              setSelectedLottery(Number(lottery.id));
+                              loadUserTickets(Number(lottery.id));
+                            }}
+                            className="action-btn"
+                          >
+                            🎟️ My Tickets
+                          </button>
+                          <button
+                            onClick={() => handleDrawWinner(Number(lottery.id))}
+                            className="action-btn draw-btn"
+                            disabled={processing}
+                          >
+                            🎲 Draw Winner
+                          </button>
+                        </>
+                      ) : (
+                        <>
+                          <button
+                            onClick={() => {
+                              setSelectedLottery(Number(lottery.id));
+                              loadUserTickets(Number(lottery.id));
+                            }}
+                            className="action-btn"
+                          >
+                            🎟️ My Tickets
+                          </button>
+                          {lottery.winner && (
+                            <div
+                              style={{
+                                padding: "8px",
+                                backgroundColor: "#dcfce7",
+                                borderRadius: "6px",
+                                marginTop: "8px",
+                                textAlign: "center",
+                                fontSize: "14px",
+                                fontWeight: "500",
+                              }}
+                            >
+                              ✅ Lottery Completed
+                            </div>
+                          )}
+                        </>
+                      )}
                     </>
                   )}
-                  {wallet.isConnected &&
-                    wallet.address &&
-                    lottery.is_active && (
-                      <button
-                        onClick={() => handleDrawWinner(Number(lottery.id))}
-                        className="action-btn draw-btn"
-                        disabled={processing}
-                      >
-                        🎲 Draw Winner
-                      </button>
-                    )}
                 </div>
 
                 {selectedLottery === Number(lottery.id) &&
@@ -573,7 +663,7 @@ function App() {
                   )}
               </div>
             ))}
-      </div>
+          </div>
         )}
       </main>
 
@@ -583,7 +673,7 @@ function App() {
         </p>
         <p>Built on Stellar Soroban Testnet</p>
       </footer>
-      </div>
+    </div>
   );
 }
 

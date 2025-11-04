@@ -1,6 +1,10 @@
 ## Contract Details
-Contract ID: CDEHL3FHJEO2RDYILJCPPNYWMKF2PGUJKAKGUU5MW6GWLETJOKLKI53Y
-![alt text](image.png)
+
+- **Lottery Contract ID**: `CCU3FXQCJZ7HRUGWC6TJRZUJ4HVTHZW4LRYR7FILPA7GRBNI7GHHDWPC`
+- **Payment Token ID**: `CAAVFG6T35KMPIFCSTLAQW7CF3JVIJLZ67H6VZ65EWKJT4RDNCQXJ6US`
+- **Admin Address**: `GB7UYMD3K7CLHC374ZRZDAR5ORC55P7BIFTSZZT426GS6OQHVFP5G3XG`
+  ![alt text](image.png)
+
 # 🎰 NFT Lottery DApp - Stellar Soroban
 
 <div align="center">
@@ -27,6 +31,7 @@ Contract ID: CDEHL3FHJEO2RDYILJCPPNYWMKF2PGUJKAKGUU5MW6GWLETJOKLKI53Y
 NFT Lottery DApp is a transparent, decentralized lottery platform built on the Stellar blockchain using Soroban smart contracts. The platform enables administrators to create lottery rounds with unique NFT prizes of varying rarity levels, while users can purchase tickets using Stellar tokens for a chance to win exclusive digital collectibles.
 
 The system leverages blockchain technology to ensure:
+
 - **Transparency**: All lottery data is stored on-chain and publicly verifiable
 - **Fairness**: Random winner selection using blockchain-based randomness
 - **Security**: Smart contract-enforced rules with no possibility of manipulation
@@ -53,6 +58,7 @@ Our vision is to revolutionize digital collectibles and gaming by creating a **f
 ### Long-term Vision
 
 We envision a future where:
+
 - Artists and creators can distribute their NFTs fairly while generating revenue
 - Communities can run autonomous lotteries for exclusive drops and limited editions
 - Cross-chain NFT lotteries connect multiple blockchain ecosystems
@@ -89,6 +95,7 @@ We envision a future where:
 ## 🌟 Future Scope
 
 ### Phase 1: Enhanced Features (Q1 2026)
+
 - [ ] **Automatic Prize Distribution**: NFT minting and automatic transfer to winners
 - [ ] **Multiple Payment Tokens**: Accept various Stellar tokens for ticket purchases
 - [ ] **Lottery Scheduling**: Set start/end dates for automated lottery lifecycle
@@ -96,6 +103,7 @@ We envision a future where:
 - [ ] **Fee Distribution**: Customizable fee splits for platform sustainability
 
 ### Phase 2: Advanced Functionality (Q2 2026)
+
 - [ ] **Multi-Prize Lotteries**: Multiple winners per lottery round
 - [ ] **Tiered Prizes**: Different NFTs for 1st, 2nd, 3rd place winners
 - [ ] **Lucky Numbers**: Users can choose their lucky ticket numbers
@@ -103,6 +111,7 @@ We envision a future where:
 - [ ] **Referral System**: Earn bonus tickets for referring friends
 
 ### Phase 3: Platform Expansion (Q3 2026)
+
 - [ ] **DAO Governance**: Community-controlled lottery parameters
 - [ ] **Staking Rewards**: Stake tokens to earn free lottery entries
 - [ ] **NFT Marketplace Integration**: Direct listing of won NFTs
@@ -110,6 +119,7 @@ We envision a future where:
 - [ ] **Social Features**: Leaderboards, achievements, and social sharing
 
 ### Phase 4: Ecosystem Growth (Q4 2026)
+
 - [ ] **Cross-Chain Bridge**: Connect to other blockchain networks
 - [ ] **White Label Solution**: Allow anyone to launch their own lottery
 - [ ] **API & SDK**: Developer tools for integrating lotteries into games/apps
@@ -117,6 +127,7 @@ We envision a future where:
 - [ ] **AI-Powered Analytics**: Predictive models for optimal lottery parameters
 
 ### Additional Enhancements
+
 - **Dynamic NFT Prizes**: NFTs that evolve based on lottery performance
 - **Charity Lotteries**: Donate portions of proceeds to verified causes
 - **Flash Lotteries**: Quick 1-hour lotteries for instant gratification
@@ -141,7 +152,9 @@ We envision a future where:
 ## 🔧 Contract Details
 
 - **Network**: Stellar Testnet
-- **Contract ID**: `CDEHL3FHJEO2RDYILJCPPNYWMKF2PGUJKAKGUU5MW6GWLETJOKLKI53Y`
+- **Lottery Contract ID**: `CCU3FXQCJZ7HRUGWC6TJRZUJ4HVTHZW4LRYR7FILPA7GRBNI7GHHDWPC`
+- **Payment Token ID**: `CAAVFG6T35KMPIFCSTLAQW7CF3JVIJLZ67H6VZ65EWKJT4RDNCQXJ6US`
+- **Admin Address**: `GB7UYMD3K7CLHC374ZRZDAR5ORC55P7BIFTSZZT426GS6OQHVFP5G3XG`
 - **Language**: Rust (Soroban SDK)
 - **RPC URL**: `https://soroban-testnet.stellar.org`
 - **Network Passphrase**: `Test SDF Network ; September 2015`
@@ -151,16 +164,19 @@ We envision a future where:
 Before you begin, ensure you have the following installed:
 
 1. **Rust** (latest stable version)
+
    ```bash
    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
    ```
 
 2. **Stellar CLI**
+
    ```bash
    cargo install --locked stellar-cli --features opt
    ```
 
 3. **Node.js & npm** (v16+ for frontend)
+
    ```bash
    # Download from https://nodejs.org/
    node --version
@@ -226,12 +242,13 @@ stellar keys fund buyer --network testnet
 ### Step 3: Initialize the Contract
 
 **Important**: Replace placeholders with your actual values:
+
 - `YOUR_ADMIN_PUBLIC_KEY`: Your admin's public key
 - `YOUR_TOKEN_CONTRACT_ID`: Your payment token contract ID
 
 ```bash
 stellar contract invoke \
-  --id CDEHL3FHJEO2RDYILJCPPNYWMKF2PGUJKAKGUU5MW6GWLETJOKLKI53Y \
+  --id CCU3FXQCJZ7HRUGWC6TJRZUJ4HVTHZW4LRYR7FILPA7GRBNI7GHHDWPC \
   --source admin \
   --network testnet \
   -- \
@@ -244,7 +261,7 @@ stellar contract invoke \
 
 ```bash
 stellar contract invoke \
-  --id CDEHL3FHJEO2RDYILJCPPNYWMKF2PGUJKAKGUU5MW6GWLETJOKLKI53Y \
+  --id CCU3FXQCJZ7HRUGWC6TJRZUJ4HVTHZW4LRYR7FILPA7GRBNI7GHHDWPC \
   --source admin \
   --network testnet \
   -- \
@@ -258,6 +275,7 @@ stellar contract invoke \
 ```
 
 **NFT Rarity Levels**:
+
 - `1` = Common (Basic NFTs)
 - `2` = Rare (Uncommon NFTs)
 - `3` = Epic (High-value NFTs)
@@ -267,7 +285,7 @@ stellar contract invoke \
 
 ```bash
 stellar contract invoke \
-  --id CDEHL3FHJEO2RDYILJCPPNYWMKF2PGUJKAKGUU5MW6GWLETJOKLKI53Y \
+  --id CCU3FXQCJZ7HRUGWC6TJRZUJ4HVTHZW4LRYR7FILPA7GRBNI7GHHDWPC \
   --source buyer \
   --network testnet \
   -- \
@@ -281,7 +299,7 @@ stellar contract invoke \
 
 ```bash
 stellar contract invoke \
-  --id CDEHL3FHJEO2RDYILJCPPNYWMKF2PGUJKAKGUU5MW6GWLETJOKLKI53Y \
+  --id CCU3FXQCJZ7HRUGWC6TJRZUJ4HVTHZW4LRYR7FILPA7GRBNI7GHHDWPC \
   --network testnet \
   -- \
   get_lottery \
@@ -292,7 +310,7 @@ stellar contract invoke \
 
 ```bash
 stellar contract invoke \
-  --id CDEHL3FHJEO2RDYILJCPPNYWMKF2PGUJKAKGUU5MW6GWLETJOKLKI53Y \
+  --id CCU3FXQCJZ7HRUGWC6TJRZUJ4HVTHZW4LRYR7FILPA7GRBNI7GHHDWPC \
   --network testnet \
   -- \
   get_user_tickets \
@@ -304,7 +322,7 @@ stellar contract invoke \
 
 ```bash
 stellar contract invoke \
-  --id CDEHL3FHJEO2RDYILJCPPNYWMKF2PGUJKAKGUU5MW6GWLETJOKLKI53Y \
+  --id CCU3FXQCJZ7HRUGWC6TJRZUJ4HVTHZW4LRYR7FILPA7GRBNI7GHHDWPC \
   --source admin \
   --network testnet \
   -- \
@@ -316,9 +334,11 @@ stellar contract invoke \
 ## 📚 Contract Methods
 
 ### `initialize`
+
 Initialize the contract with admin and payment token.
 
 **Parameters**:
+
 - `admin`: Address - Admin address
 - `payment_token`: Address - Payment token contract ID
 
@@ -327,9 +347,11 @@ Initialize the contract with admin and payment token.
 ---
 
 ### `create_lottery`
+
 Create a new lottery round.
 
 **Parameters**:
+
 - `admin`: Address - Admin address (must match initialized admin)
 - `ticket_price`: i128 - Price per ticket in stroops
 - `max_tickets`: u32 - Maximum number of tickets
@@ -344,9 +366,11 @@ Create a new lottery round.
 ---
 
 ### `buy_ticket`
+
 Purchase lottery tickets.
 
 **Parameters**:
+
 - `buyer`: Address - Buyer's address
 - `lottery_id`: u64 - ID of the lottery
 - `num_tickets`: u32 - Number of tickets to buy
@@ -356,9 +380,11 @@ Purchase lottery tickets.
 ---
 
 ### `draw_winner`
+
 Draw a random winner for the lottery.
 
 **Parameters**:
+
 - `admin`: Address - Admin address
 - `lottery_id`: u64 - ID of the lottery
 
@@ -369,9 +395,11 @@ Draw a random winner for the lottery.
 ---
 
 ### `get_lottery`
+
 Get details of a specific lottery.
 
 **Parameters**:
+
 - `lottery_id`: u64 - ID of the lottery
 
 **Returns**: Lottery struct with all details
@@ -381,9 +409,11 @@ Get details of a specific lottery.
 ---
 
 ### `get_user_tickets`
+
 Get user's ticket numbers for a lottery.
 
 **Parameters**:
+
 - `user`: Address - User's address
 - `lottery_id`: u64 - ID of the lottery
 
@@ -394,6 +424,7 @@ Get user's ticket numbers for a lottery.
 ---
 
 ### `get_lottery_count`
+
 Get total number of lotteries created.
 
 **Returns**: u64 - Total lottery count
@@ -409,7 +440,7 @@ Create a file `run_lottery.sh`:
 ```bash
 #!/bin/bash
 
-CONTRACT_ID="CDEHL3FHJEO2RDYILJCPPNYWMKF2PGUJKAKGUU5MW6GWLETJOKLKI53Y"
+CONTRACT_ID="CCU3FXQCJZ7HRUGWC6TJRZUJ4HVTHZW4LRYR7FILPA7GRBNI7GHHDWPC"
 NETWORK="testnet"
 
 echo "🎰 === NFT Lottery Demo === 🎰"
@@ -483,6 +514,7 @@ echo -e "\n✅ Demo complete! 🎉"
 ```
 
 Make it executable and run:
+
 ```bash
 chmod +x run_lottery.sh
 ./run_lottery.sh
@@ -505,7 +537,7 @@ stellar keys fund buyer3 --network testnet
 for buyer in buyer1 buyer2 buyer3; do
   echo "💳 $buyer buying tickets..."
   stellar contract invoke \
-    --id CDEHL3FHJEO2RDYILJCPPNYWMKF2PGUJKAKGUU5MW6GWLETJOKLKI53Y \
+    --id CCU3FXQCJZ7HRUGWC6TJRZUJ4HVTHZW4LRYR7FILPA7GRBNI7GHHDWPC \
     --source $buyer \
     --network testnet \
     -- \
@@ -551,7 +583,7 @@ Follow the usage guide above to test on Stellar testnet.
 
 ```bash
 stellar contract invoke \
-  --id CDEHL3FHJEO2RDYILJCPPNYWMKF2PGUJKAKGUU5MW6GWLETJOKLKI53Y \
+  --id CCU3FXQCJZ7HRUGWC6TJRZUJ4HVTHZW4LRYR7FILPA7GRBNI7GHHDWPC \
   --network testnet \
   --simulate-only \
   -- \
@@ -598,25 +630,33 @@ stellar contract deploy \
 ### Common Issues
 
 #### 1. "Already initialized" error
+
 **Solution**: Contract can only be initialized once. Use a new contract deployment or use the existing initialized contract.
 
 #### 2. "Unauthorized" error
+
 **Solution**: Make sure you're using the correct admin identity that was set during initialization.
 
 #### 3. "Not enough tickets available"
+
 **Solution**: Check the lottery's `max_tickets` and `tickets_sold`. You may be trying to buy more tickets than available.
 
 #### 4. "Lottery not active"
+
 **Solution**: The lottery has already been drawn. Create a new lottery or check with `get_lottery`.
 
 #### 5. Yarn/npm installation errors
+
 **Solution**: Use the `--ignore-scripts` flag:
+
 ```bash
 npm install @stellar/stellar-sdk --ignore-scripts
 ```
 
 #### 6. Insufficient funds
+
 **Solution**: Fund your account:
+
 ```bash
 stellar keys fund YOUR_IDENTITY --network testnet
 ```

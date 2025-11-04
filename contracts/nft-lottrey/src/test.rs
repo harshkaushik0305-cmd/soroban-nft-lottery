@@ -3,7 +3,9 @@
 use super::*;
 use soroban_sdk::{testutils::Address as _, token, Address, Env, String};
 
-fn create_token_contract<'a>(e: &Env) -> (Address, token::Client<'a>, token::StellarAssetClient<'a>) {
+fn create_token_contract<'a>(
+    e: &Env,
+) -> (Address, token::Client<'a>, token::StellarAssetClient<'a>) {
     let contract_address = e.register_stellar_asset_contract_v2(Address::generate(e));
     (
         contract_address.address(),
@@ -12,7 +14,14 @@ fn create_token_contract<'a>(e: &Env) -> (Address, token::Client<'a>, token::Ste
     )
 }
 
-fn setup_test_env<'a>() -> (Env, Address, Address, Address, token::Client<'a>, token::StellarAssetClient<'a>) {
+fn setup_test_env<'a>() -> (
+    Env,
+    Address,
+    Address,
+    Address,
+    token::Client<'a>,
+    token::StellarAssetClient<'a>,
+) {
     let env = Env::default();
     env.mock_all_auths();
 
@@ -49,7 +58,7 @@ fn test_initialize_twice_fails() {
 
     // Initialize the contract
     client.initialize(&admin, &token_address);
-    
+
     // Try to initialize again - should panic
     client.initialize(&admin, &token_address);
 }
@@ -224,7 +233,7 @@ fn test_buy_multiple_tickets() {
 fn test_multiple_users_buy_tickets() {
     let (env, admin, user1, token_address, _, token_admin) = setup_test_env();
     let user2 = Address::generate(&env);
-    
+
     // Mint tokens to user2
     token_admin.mint(&user2, &100000);
 
@@ -286,10 +295,10 @@ fn test_buy_more_than_available() {
 fn test_draw_winner() {
     let (env, admin, user1, token_address, _, token_admin) = setup_test_env();
     let user2 = Address::generate(&env);
-    
+
     // Mint tokens to user2
     token_admin.mint(&user2, &100000);
-    
+
     let contract_id = env.register_contract(None, NFTLotteryContract);
     let client = NFTLotteryContractClient::new(&env, &contract_id);
 
@@ -443,7 +452,7 @@ fn test_complete_lottery_flow() {
     let (env, admin, user1, token_address, token_client, token_admin) = setup_test_env();
     let user2 = Address::generate(&env);
     let user3 = Address::generate(&env);
-    
+
     // Mint tokens to user2 and user3
     token_admin.mint(&user2, &100000);
     token_admin.mint(&user3, &100000);
