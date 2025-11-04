@@ -188,13 +188,14 @@
 .lottery-card {
   background: white;
   border-radius: 16px;
-  overflow: hidden;
+  overflow: visible;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
   transition: all 0.3s ease;
   display: flex;
   flex-direction: column;
   width: 350px;
   flex-shrink: 0;
+  position: relative;
 }
 
 .lottery-card:hover {
@@ -208,7 +209,8 @@
 }
 
 @keyframes pulse-glow {
-  0%, 100% {
+  0%,
+  100% {
     box-shadow: 0 0 20px rgba(251, 191, 36, 0.5);
   }
   50% {
@@ -220,14 +222,16 @@
   content: "⭐";
   position: absolute;
   top: -10px;
-  right: -10px;
+  right: -20px;
   font-size: 2rem;
-  z-index: 10;
+  z-index: 1000;
   animation: bounce 1s ease-in-out infinite;
+  pointer-events: none;
 }
 
 @keyframes bounce {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateY(0);
   }
   50% {
@@ -239,6 +243,8 @@
   padding: 1.25rem;
   background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
   border-top: 4px solid;
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
 }
 
 .lottery-title {
@@ -351,6 +357,8 @@
   padding: 1.25rem;
   background: #f8fafc;
   border-top: 1px solid #e2e8f0;
+  border-bottom-left-radius: 16px;
+  border-bottom-right-radius: 16px;
 }
 
 .user-tickets h4 {

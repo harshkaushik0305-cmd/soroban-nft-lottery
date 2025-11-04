@@ -257,9 +257,23 @@ function App() {
     return colors[rarity] || "#9ca3af";
   };
 
-  const formatPrice = (price: string): string => {
+  const formatPrice = (price: string): { value: string; unit: string } => {
     const num = BigInt(price);
-    return (Number(num) / 1_000_000).toFixed(2);
+    const xlm = Number(num) / 1_000_000;
+
+    // If price is less than 0.01 XLM, show in stroops
+    if (xlm < 0.01) {
+      return {
+        value: num.toString(),
+        unit: "stroops",
+      };
+    }
+
+    // Otherwise show in XLM with 2 decimal places
+    return {
+      value: xlm.toFixed(2),
+      unit: "XLM",
+    };
   };
 
   return (
@@ -449,11 +463,13 @@ function App() {
                 {selectedLottery && (
                   <small>
                     Price per ticket:{" "}
-                    {formatPrice(
-                      lotteries.find((l) => Number(l.id) === selectedLottery)
-                        ?.ticket_price || "0"
-                    )}{" "}
-                    XLM
+                    {(() => {
+                      const formatted = formatPrice(
+                        lotteries.find((l) => Number(l.id) === selectedLottery)
+                          ?.ticket_price || "0"
+                      );
+                      return `${formatted.value} ${formatted.unit}`;
+                    })()}
                   </small>
                 )}
               </div>
@@ -543,7 +559,12 @@ function App() {
                   <div className="lottery-info">
                     <div className="info-row">
                       <span>Ticket Price:</span>
-                      <span>{formatPrice(lottery.ticket_price)} XLM</span>
+                      <span>
+                        {(() => {
+                          const formatted = formatPrice(lottery.ticket_price);
+                          return `${formatted.value} ${formatted.unit}`;
+                        })()}
+                      </span>
                     </div>
                     <div className="info-row">
                       <span>Tickets Sold:</span>
@@ -564,12 +585,12 @@ function App() {
                       <div
                         className="info-row winner"
                         style={{
-                          backgroundColor: isWinner ? "#dcfce7" : "#fef3c7",
+                          backgroundColor: "#fef3c7",
                           padding: "12px",
                           borderRadius: "8px",
                           marginTop: "8px",
                           border: isWinner
-                            ? "2px solid #10b981"
+                            ? "2px solid #fbbf24"
                             : "2px solid #f59e0b",
                         }}
                       >
@@ -642,10 +663,27 @@ function App() {
                             )}
                             <button
                               onClick={() => {
-                                setSelectedLottery(Number(lottery.id));
-                                loadUserTickets(Number(lottery.id));
+                                if (selectedLottery === Number(lottery.id)) {
+                                  // Toggle off if already selected
+                                  setSelectedLottery(null);
+                                  setUserTickets([]);
+                                } else {
+                                  // Toggle on
+                                  setSelectedLottery(Number(lottery.id));
+                                  loadUserTickets(Number(lottery.id));
+                                }
                               }}
                               className="action-btn"
+                              style={{
+                                backgroundColor:
+                                  selectedLottery === Number(lottery.id)
+                                    ? "#667eea"
+                                    : undefined,
+                                color:
+                                  selectedLottery === Number(lottery.id)
+                                    ? "white"
+                                    : undefined,
+                              }}
                             >
                               🎟️ My Tickets
                             </button>
@@ -665,10 +703,27 @@ function App() {
                           <>
                             <button
                               onClick={() => {
-                                setSelectedLottery(Number(lottery.id));
-                                loadUserTickets(Number(lottery.id));
+                                if (selectedLottery === Number(lottery.id)) {
+                                  // Toggle off if already selected
+                                  setSelectedLottery(null);
+                                  setUserTickets([]);
+                                } else {
+                                  // Toggle on
+                                  setSelectedLottery(Number(lottery.id));
+                                  loadUserTickets(Number(lottery.id));
+                                }
                               }}
                               className="action-btn"
+                              style={{
+                                backgroundColor:
+                                  selectedLottery === Number(lottery.id)
+                                    ? "#667eea"
+                                    : undefined,
+                                color:
+                                  selectedLottery === Number(lottery.id)
+                                    ? "white"
+                                    : undefined,
+                              }}
                             >
                               🎟️ My Tickets
                             </button>
@@ -692,23 +747,6 @@ function App() {
                       </>
                     )}
                   </div>
-
-                  {isWinner && (
-                    <div
-                      style={{
-                        padding: "12px",
-                        margin: "0 1.25rem",
-                        backgroundColor: "#dcfce7",
-                        borderRadius: "8px",
-                        textAlign: "center",
-                        fontWeight: "bold",
-                        color: "#065f46",
-                        borderTop: "1px solid #e2e8f0",
-                      }}
-                    >
-                      🎊 Congratulations! You won this lottery! 🎊
-                    </div>
-                  )}
 
                   {selectedLottery === Number(lottery.id) &&
                     userTickets.length > 0 && (
