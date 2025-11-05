@@ -16,7 +16,7 @@
 
 **A Decentralized NFT Lottery Platform Built on Stellar Blockchain**
 
-[Demo](#-usage-guide) • [Documentation](#-contract-methods) • [Quick Start](#-quick-start-checklist)
+[🌐 Live Demo](https://soroban-nft-lottery.vercel.app/) • [Documentation](#-contract-methods) • [Quick Start](#-quick-start-checklist)
 
 </div>
 
@@ -158,6 +158,7 @@ We envision a future where:
 - **Language**: Rust (Soroban SDK)
 - **RPC URL**: `https://soroban-testnet.stellar.org`
 - **Network Passphrase**: `Test SDF Network ; September 2015`
+- **Frontend**: [Live Demo](https://soroban-nft-lottery.vercel.app/)
 
 ## 📦 Prerequisites
 
@@ -205,12 +206,18 @@ stellar contract build
 
 ### 3. Setup Frontend (Optional)
 
+See the [Frontend README](./frontend/README.md) for detailed frontend setup instructions.
+
+**Quick Start**:
+
 ```bash
 cd frontend
 npm install --ignore-scripts @stellar/stellar-sdk lucide-react
 npm install
 npm run dev
 ```
+
+**Or use the live demo**: [https://soroban-nft-lottery.vercel.app/](https://soroban-nft-lottery.vercel.app/)
 
 ## 🚀 Usage Guide
 
